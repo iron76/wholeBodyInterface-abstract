@@ -1,0 +1,44 @@
+\documentclass[11pt]{article}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{epstopdf}
+\usepackage{url}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\hyphenation{i-Whole-Body-Model}
+\newcommand\textvtt[1]{{\normalfont\fontfamily{cmvtt}\selectfont #1}}
+
+\title{\textvtt{wholeBodyInterface}\footnote{Code \protect\url{https://github.com/robotology-playground/wholeBodyInterface} and documentation \protect\url{http://wiki.icub.org/codyco/dox/html/classwbi_1_1wholeBodyInterface.html}.}, an open-source software abstraction layer for whole-body motion control}
+\author{S. Traversaro, F. Romano, N. Kuppuswamy, \\ A. Del Prete, J. Eljaik, N. Lorenzo, F. Nori}
+%\date{}                                           % Activate to display a given date or no date
+
+\begin{document}
+\maketitle
+
+% One of the most time-consuming activities in the development of robotics applications is writing and maintaining software. This high-cost development slows down the research activities and discourages collaborations between groups that do not share the same software infrastructure. During the last 10 years the robotics community has struggled to ease the sharing of software by proposing different robotics frameworks, such as ROS \cite{ROS} and YARP \cite{YARP}. Despite these first steps, nowadays the development of software is still an extremely platform-dependent process. 
+We propose a C++ open-source software API that aims at standardising the software development for control, estimation and identification of free-floating robots. The key idea is to provide a software abstraction layer that can be used on any robot for which the layer has been implemented. Our API is called \textvtt{iWholeBodyInterface} and it is divided into four parts: \textvtt{iWholeBodySensors}, \textvtt{iWholeBodyActuators}, \textvtt{iWholeBodyModel} and \textvtt{iWholeBodyStates}. The first interface, \textvtt{iWholeBodySensors}, contains methods to access the sensors of the robot. Similarly, \textvtt{iWholeBodyActuators} offers methods to command the actuators. Different low-level control modes are supported: position control, velocity control, torque control. The third interface, \textvtt{iWholeBodyModel}, provides access the the kinematic and dynamic model of the robot, for instance: forward kinematics, Jacobians, inverse dynamics, mass matrix. Finally, \textvtt{iWholeBodyStates} is the API for an estimator: since controllers typically need quantities for which no sensor may be available (e.g. joint velocities) this interface provides a standard way to get them. 
+
+\paragraph{YARP based implementation.}
+We provided a C++ implementation\footnote{\protect\url{https://github.com/robotology-playground/yarp-wholebodyinterface}} of the \textvtt{iWholeBodyInterface} introduced in the previous section. The \textvtt{iWholeBodyActuators} and \textvtt{iWholeBodySensors} classes have been implemented to interface with {YARP} controlboards. The \textvtt{iWholeBodyModel} class, instead, computes kinematic and dynamic quantities by using the {iDynTree}\footnote{\protect\url{https://github.com/robotology/idyntree}} dynamic library. The user is required to provide a {URDF} model of the robot, and to write a configuration file specifying how the joints are mapped to the {YARP} controlboards. It is also possible to specify the presence of inertial measurement units and force/torque sensors. The configuration file is already provided for different humanoids including {iCub}, {CoMan} and {Armar4}.
+
+\paragraph{\textvtt{iWholeBodyInterface} and \textsc{Matlab}.}
+
+Two sets of C++ files have been created to compile {MEX} files to be called as built-in functions in \textsc{Matlab}\footnote{\protect\url{https://github.com/robotology-playground/mex-wholebodymodel}} and \textsc{Simulink}\footnote{\protect\url{https://github.com/robotology-playground/WBI-Toolbox}}, respectively. Utilising the same structure as the other \textvtt{iWholeBodyInterface} components, the toolbox is able to automatically initialise the interface and the rapid visual prototyping of different control schemes is enabled through the natural flexibility of \textsc{Matlab} \textsc{Simulink}; other pre-existing toolbox components may easily be used in concurrence as well. These tools have so far played a critical role in advancing the state-of-art in the development of a stable whole body balancing controller and state estimator on the iCub humanoid robot \footnote{\protect\url{https://www.youtube.com/watch?v=VrPBSSQEr3A}}.
+
+
+\paragraph{Estimation as implemented in \textvtt{iWholeBodyStates}.}
+We use an instance of the \textvtt{iWholeBodySensors} interface to implement multi-sensor fusion techniques for whole body control (as the one described in \cite{nori15}), to abstract from the middleware-specific way in which sensor data are published. For the iCub robot this permits to access transparently a given accelerometer or gyroscope sensor, regardless if their measure is published as part of an IMU measure or as a standalone measure. The proposed solution enables great flexibility in defining the estimation algorithm independently from the set of available sensors.
+
+\paragraph{\textvtt{wholeBodyInterface} at Humanoids 2015.} We will introduce the basic concepts of the \textvtt{wholeBodyInterface} dividing the presentation in a theoretical and a practical session, the latter including some live demos and step-by-step tutorials on simulated robots. 
+
+
+
+\bibliography{myBibliography}
+\bibliographystyle{plain}
+\end{document}
+
+\end{document}  
